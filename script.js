@@ -12,7 +12,15 @@ const modal = document.getElementById('myModal');
 const btn = document.getElementById('button');
 const close = document.getElementsByClassName('modal-close')[0];
 
-let myLibrary = [];
+// delete button
+const deleteBtns = document.querySelectorAll('.delete');
+
+let myLibrary = [
+  {title: 'In Search of Lost Time', author: 'Marcel Proust', pages: '4,215', read: false},
+  {title: '100 Years of Sol.', author: 'Garcia Marquez', pages: '415', read: false},
+  {title: 'Harry Potter', author: 'J.K Rowling', pages: '815', read: false},
+  {title: 'Catch 22', author: 'Joseph Keller', pages: '548', read: true}
+];
 
 function Book(title, author, pages) {
   this.title = title,
@@ -29,6 +37,45 @@ function addBookToLibrary() {
   )
   myLibrary.push(newBook);
   render();
+  clear();
+}
+
+window.addEventListener('load', renderLibrary);
+
+function renderLibrary() {
+  myLibrary.forEach(function(i, index) {
+    console.log(i);
+    if (i !== '') {
+      // create a new dom div with the class of: book col-sm-4
+      let div = document.createElement('div');
+      div.classList = 'book col-sm-4'
+      // generate title in div, taken from the newBook
+      let title = document.createElement('h1');
+      title.innerText = i.title;
+      title.classList = 'book-title';
+      // generate author in div, taken from newBook
+      let author = document.createElement('p');
+      author.innerText = i.author;
+      author.classList = 'book-author';
+      // generate pages in div, taken from newBook
+      let pages = document.createElement('p');
+      pages.innerText = i.pages;
+      pages.classList = 'book-pages';
+      // give it a read status taken from newBook
+
+      // delete button
+      let deleteBook = document.createElement('button');
+      deleteBook.innerText = 'x';
+      deleteBook.classList = 'delete';
+      // append these newBook attributes to the div
+      div.appendChild(title);
+      div.appendChild(author);
+      div.appendChild(pages);
+      div.appendChild(deleteBook);
+      // append div to the end of BookRow
+      bookRow.appendChild(div);
+    }
+  })
 }
 
 function render() {
@@ -49,12 +96,23 @@ function render() {
   pages.classList = 'book-pages';
   // give it a read status taken from newBook
 
+  // delete button
+  let deleteBook = document.createElement('button');
+  deleteBook.innerText = 'x';
+  deleteBook.classList = 'delete';
   // append these newBook attributes to the div
   div.appendChild(title);
   div.appendChild(author);
   div.appendChild(pages);
+  div.appendChild(deleteBook);
   // append div to the end of BookRow
   bookRow.appendChild(div);
+}
+
+function clear() {
+  title.value = '',
+  author.value = '',
+  pages.value = ''
 }
 
 // Modal functionality
@@ -71,3 +129,10 @@ window.addEventListener('click', function (event) {
     modal.style.display = 'none';
   }
 })
+
+// // When delete is pressed
+deleteBtns.forEach(book => {
+  book.addEventListener('click', function() {
+    myLibrary.pop(-1);
+  })
+});
