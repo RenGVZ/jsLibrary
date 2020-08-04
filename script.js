@@ -7,6 +7,11 @@ const bookRead = document.getElementById('read');
 
 const bookRow = document.querySelector('.row');
 
+// Modal selectors
+const modal = document.getElementById('myModal');
+const btn = document.getElementById('button');
+const close = document.getElementsByClassName('modal-close')[0];
+
 let myLibrary = [];
 
 function Book(title, author, pages) {
@@ -52,4 +57,17 @@ function render() {
   bookRow.appendChild(div);
 }
 
+// Modal functionality
+btn.addEventListener('click', function() {
+  modal.style.display = "block";
+});
 
+close.addEventListener('click', function() {
+  modal.style.display = 'none';
+})
+
+window.addEventListener('click', function (event) {
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+})
