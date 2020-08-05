@@ -44,7 +44,6 @@ window.addEventListener('load', renderLibrary);
 
 function renderLibrary() {
   myLibrary.forEach(function(i, index) {
-    console.log(i);
     if (i !== '') {
       // create a new dom div with the class of: book col-sm-4
       let div = document.createElement('div');
@@ -64,14 +63,17 @@ function renderLibrary() {
       // give it a read status taken from newBook
 
       // delete button
-      let deleteBook = document.createElement('button');
-      deleteBook.innerText = 'x';
-      deleteBook.classList = 'delete';
+      let removeButton = document.createElement('button');
+      removeButton.innerText = 'x';
+      removeButton.classList = 'delete';
+      removeButton.addEventListener('click', () => removeItem(i));
+      // removeButton.id = 'v'
+
       // append these newBook attributes to the div
       div.appendChild(title);
       div.appendChild(author);
       div.appendChild(pages);
-      div.appendChild(deleteBook);
+      div.appendChild(removeButton);
       // append div to the end of BookRow
       bookRow.appendChild(div);
     }
@@ -131,8 +133,10 @@ window.addEventListener('click', function (event) {
 })
 
 // // When delete is pressed
-deleteBtns.forEach(book => {
-  book.addEventListener('click', function() {
-    myLibrary.pop(-1);
-  })
-});
+function removeItem(i) {
+  console.log(i)
+  myLibrary.splice(i, 1);
+  renderLibrary();
+  // element.remove();
+  // restoreButton();
+}
