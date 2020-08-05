@@ -66,7 +66,11 @@ function renderLibrary() {
       let removeButton = document.createElement('button');
       removeButton.innerText = 'x';
       removeButton.classList = 'delete';
-      removeButton.addEventListener('click', () => removeItem(i));
+      removeButton.addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete')) {
+          event.target.parentElement.remove();
+        }
+      })
       // removeButton.id = 'v'
 
       // append these newBook attributes to the div
@@ -132,11 +136,14 @@ window.addEventListener('click', function (event) {
   }
 })
 
-// // When delete is pressed
-function removeItem(i) {
-  console.log(i)
-  myLibrary.splice(i, 1);
-  renderLibrary();
-  // element.remove();
-  // restoreButton();
-}
+// delete
+// document.querySelector('.delete').addEventListener('click', (event) => {
+//   console.log(event);
+// })
+// function removeItem(i) {
+//   console.log(i)
+//   myLibrary.splice(i, 1);
+//   renderLibrary();
+//   // element.remove();
+//   // restoreButton();
+// }
