@@ -1,17 +1,17 @@
 // make a Book class with constructor
 class Book {
   constructor(title, author, pages, isbn) {
-    this.title = title,
-    this.author = author,
-    this.pages = pages,
-    this.isbn = isbn
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.isbn = isbn;
   }
 }
 
 // UI class: handles UI tasks
 class UI {
   // displayBooks static method
-  static displayBooks() {
+  static displayBooks = () => {
     // Create StoredBooks array (temp)
     const StoredBooks = [
       {
@@ -30,61 +30,66 @@ class UI {
     const books = StoredBooks
 
     // add each book from books to book list using UI addBookToList method
-    books.forEach((book) => UI.addBookToList(book));
-
+    books.forEach(book => UI.addBookToList(book));
     // change const books to Store.getBooks() (after)
-    
-  }  
+  }
   // addBookToList method
-  static addBookToList(book) {
+  static addBookToList = (book) => {
     // grab list
-    const list = document.querySelector('#book-list');
+    const list = document.getElementById('book-list');
     // create row
     const row = document.createElement('tr');
-
     // generate book content inside of row (innerHTML)
     row.innerHTML = `
       <td>${book.title}</td>
       <td>${book.author}</td>
       <td>${book.pages}</td>
       <td>${book.isbn}</td>
-      <td><a href='#' class='btn btn-danger btn-sm delete'>X</a></td>
+      <td class='btn btn-danger delete'>Delete</td>
     `
     // append row to list
     list.appendChild(row);
-  };
-
-  // deleteBook method get element from removing book (from end of code)
-  static deleteBook(el) {
+  } 
+  // static deleteBook method get element for removing book (from end of code)
+  static deleteBook = (el) => {
     // if the element's class list contains delete, remove the parent's parent element
     if (el.classList.contains('delete')) {
-      el.parentElement.parentElement.remove();
+      console.log('el:', el.parentElement)
+      el.parentElement.remove()
     }
-    UI.showAlert('Book removed', 'dark')
   }
    
   // showAlert method getting the message and className
-  static showAlert(message, className) {
+  static showAlert = (message, className) => {
+    // create a new div
     const div = document.createElement('div');
     // create a new div with a classname of className
-    div.className = `alert-${className}`;
-    // append the message to the div
+    div.classList.add(`alert-${className}`);
+    // append the message to the div (passed as a document.createTextNode())
     div.appendChild(document.createTextNode(message));
     // grab container and form and insert the div before the form but after the container
     const container = document.querySelector('.container');
-    const form = document.querySelector('#book-form');
+    const form = document.getElementById('book-form');
     container.insertBefore(div, form);
-    // timeout method to remove the div after 2 seconds
-    setTimeout(() => document.querySelector(`.alert-${className}`).remove(), 1000);
-  }  
+    // timeout method to remove the alert class after 2 seconds
+    setTimeout(function() {
+      container.removeChild(div);
+    }, 2000)
+  }
+    
   // clearFields method
-  static clearFields() {
+  static clearFields = () => {
+    // give all the information empty strings for values
     document.querySelector('#title').value = '';
     document.querySelector('#author').value = '';
     document.querySelector('#pages').value = '';
     document.querySelector('#isbn').value = '';
+    
   }
-} 
+    
+}
+
+
 
 // Store class: handles storage (after)
 // class Store {
@@ -119,43 +124,42 @@ class UI {
 
 // Event: UI.displayBooks() on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', UI.displayBooks);
-
 // Event: add a book on submit from the book-form
 document.querySelector('#book-form').addEventListener('submit', (e) => {
-
+  e.preventDefault();
   // Get form values
-  const title = document.querySelector('#title').value;
-  const author = document.querySelector('#author').value;
-  const pages = document.querySelector('#pages').value;
-  const isbn = document.querySelector('#isbn').value;
+  const bookTitle = document.getElementById('title').value;
+  const bookAuthor = document.getElementById('author').value;
+  const bookPages = document.getElementById('pages').value;
+  const bookIsbn = document.getElementById('isbn').value;
   // validate the fields, if they are empty use showAlert method
-  if(title === '' || author === '' || pages === '' || isbn === '') {
-    UI.showAlert('Please fill out all fields', 'danger');
+  if (bookTitle == '' || bookAuthor == '' || bookPages == '' || bookIsbn == '') {
+    showAlert('Please fill out all fields', 'warning')
   } else {
     // if not, Instantiate a new book
-    let newBook = new Book(title, author, pages, isbn);
+   let newBook = new Book(bookTitle, bookAuthor, bookPages, bookIsbn) 
     // add book to UI
     UI.addBookToList(newBook);
     // add book to Store (after)
     // Store.addBook(book);
 
     // Show success message
-    UI.showAlert('Book added!', 'success');
-  
+    UI.showAlert('Book added', 'success');
+  }
     // clear fields
     UI.clearFields();
-  }
-})    
-// Event: grab the event on book-list click 
-document.querySelector('#book-list').addEventListener('click', (e) => {
-  // event.preventDefault()
+  })
 
+// Event: grab the event on book-list click 
+document.getElementById('book-list').addEventListener('click', (e) => {
+  // event.preventDefault()
+  e.preventDefault();
   // remove book from Store (after)
   // Store.removeBook(event.target.parentElement.previousElementSibling.textContent);
   
-
+  UI.clearFields();
   // use the event to remove book from UI
-  UI.deleteBook(e.target);
+  UI.deleteBook(e.target)
   // showAlert that the book has been removed
-  
-}); 
+  UI.showAlert('Book has been removed', 'danger');
+})
